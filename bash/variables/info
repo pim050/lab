@@ -1,0 +1,14 @@
+#!/bin/bash
+# Description: Display dotfiles information
+current_directory=$(pwd)
+dotfile_dir="$HOME/dotfiles/"
+count_files=$(find "$dotfile_dir" -maxdepth 1 -type f | wc -l)
+echo "Hi! My name is $USER and I live in '$HOME'."
+echo "I am in $current_directory."
+echo "I can count $count_files files in this folder."
+echo "This was hard to figure out."
+# I started with ls, instead of find. This was suggested after first starting out with ls, but shellcheck suggested to use find. 
+# I needed to -maxdepth 1, instead of 0. 0 only reads a folder, not the files in the folder. hence 1, for folder+files. Becuase find is looking for files (flag -f) not folders.
+# $user needed to be $USER
+# added explanation in the top to addres function of the script.
+# I had to switch the lines 4 and 5. becuase i was calling $dotfile_dir, but that had not been declared yet. It was declared 1 line later and so not recognised in the script yet.
