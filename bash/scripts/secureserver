@@ -1,0 +1,23 @@
+#!bin/bash
+
+# 1
+# make a copy before you break stuff
+config="/etc/ssh/sshd_config"
+sudo cp "$config" "$config.bak
+
+# 2
+# find and remove a line from a file
+
+# 3
+# set PasswordAuthentication
+# set PubkeyAuthentication
+echo "PasswordAuthentication no" >> /tmp/passandkey
+echo "PubkeyAuthentication yes" >> /tmp/passandkey
+
+# 4
+# paste passandkey into the new config
+cat /tmp/passandkey >> "$config"
+
+# 5
+# check if password access is removed. Sometimes there is s referral link to sshd_cocnfig.d
+# use: sudo sshd -T | grep -i passwordauthentication
