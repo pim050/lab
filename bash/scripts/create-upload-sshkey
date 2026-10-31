@@ -38,4 +38,4 @@ echo "A custom key has been made, $newsshkey."
 echo "~/.ssh/config has an append"
 echo "Use ssh ${servername} to connect."
 echo "Remember to disable password entry."
-echo "You might want to look into ansible for this."
+# I'm looking into ansible-pull for this.
