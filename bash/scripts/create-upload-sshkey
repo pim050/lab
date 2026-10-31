@@ -1,0 +1,41 @@
+#!/bin/bash
+# script to generate ssh key. based on local hostname and serverhostname
+# connects and uploads keys.
+# edits local ssh/config
+echo "Your local host name is ${HOSTNAME}. Please type the first half of the keys name."
+read -r localname
+# use answer for first half of the sshkey name.
+echo "Enter remote servers name."
+read -r servername
+#used for second half of the sshkey name.
+echo "================="
+echo "The new ssh-key will be named: '$localname$servername'"
+newsshkey="$localname$servername"
+# First check/create folders for the new key.
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
+# Create the new key. $newsshkey is used to create the new key+name
+ssh-keygen -t ed25519 -f "$HOME/.ssh/${newsshkey}"
+# Next part then asks for the servers ip and username.
+echo "To upload the key please fill in the servers' ip adress"
+read -r serverip
+echo "What is the username on the server?"
+read -r serverusername
+# ssh-add "$HOME/.ssh/${newsshkey}" # this line gives an error. commented out to check function on a fresh node.
+ssh-copy-id -i "$HOME/.ssh/${newsshkey}.pub" "${serverusername}@${serverip}"
+# Key is uploaded
+# Now append serverdetails to sshconfig, with heredoc
+cat << EOF >> "${HOME}"/.ssh/config
+Host $servername
+    HostName $serverip
+    User $serverusername
+    IdentityFile ~/.ssh/$newsshkey
+EOF
+# make sure that the config file has the correct rights.
+chmod 600 "$HOME"/.ssh/config
+echo "==================================="
+echo "A custom key has been made, $newsshkey."
+echo "~/.ssh/config has an append"
+echo "Use ssh ${servername} to connect."
+echo "Remember to disable password entry."
+echo "You might want to look into ansible for this."
